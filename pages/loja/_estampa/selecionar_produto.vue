@@ -1,0 +1,60 @@
+<template>
+  <v-row justify="center" align="center">
+    <v-col cols="12" sm="12" md="12">
+      <div class="text-center">
+        <h1>Agora Busque e Selecione um Modelo de Camiseta</h1>
+      </div>
+      <v-card>
+        <v-text-field
+          v-model="busca"
+          label="Busca"
+          placeholder="Busque aqui"
+        ></v-text-field>
+        <ProdutoList :itens="itens" :editar="redirecionar" />
+      </v-card>
+    </v-col>
+  </v-row>
+</template>
+
+<script>
+// import VuetifyLogo from '~/components/VuetifyLogo.vue'
+import ProdutoList from '@/components/ProdutoList'
+export default {
+  layout: 'loja',
+  components: {
+    ProdutoList,
+    // VuetifyLogo,
+  },
+  data() {
+    return {
+      busca: '',
+      itens: [],
+    }
+  },
+  watch: {
+    busca(busca) {
+      this.buscar(busca)
+    },
+  },
+  methods: {
+    async buscar() {
+      console.log(this.$route.params)
+      await this.$axios.get('/produto').then((response) => {
+        this.itens = response.data
+        this.itens.forEach((element) => {
+          this.buscaImagens(element)
+        })
+      })
+    },
+    async buscaImagens(produto) {
+      await this.$axios.get(`/produto/img/${produto.id}`).then((img) => {
+        produto.imagens = img.data
+      })
+    },
+    redirecionar(id) {
+      const estampa = this.$route.params.estampa
+      this.$router.push({ name: 'produto-id-info', params: { id, estampa } })
+    },
+  },
+}
+</script>
