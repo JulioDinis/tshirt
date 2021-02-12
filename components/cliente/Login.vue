@@ -3,39 +3,49 @@
     <v-row align="center" no-gutters style="height: auto">
       <v-col>
         <v-card class="pa-2" outlined tile>
-          <v-form ref="form" v-model="valid" lazy-validation>
-            <v-text-field
-              v-model="usuario.email"
-              :rules="emailRules"
-              label="E-mail"
-              required
-            ></v-text-field>
+          <div v-if="!this.$auth.$storage.getUniversal('usuarioLogado')">
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-text-field
+                v-model="usuario.email"
+                :rules="emailRules"
+                label="E-mail"
+                required
+              ></v-text-field>
 
-            <v-text-field
-              v-model="usuario.senha"
-              :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
-              :type="show ? 'text' : 'password'"
-              name="senha"
-              label="Senha"
-              required
-              counter="16"
-              @click:append="show = !show"
-            >
-            </v-text-field>
+              <v-text-field
+                v-model="usuario.senha"
+                :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="show ? 'text' : 'password'"
+                name="senha"
+                label="Senha"
+                required
+                counter="16"
+                @click:append="show = !show"
+              >
+              </v-text-field>
 
-            <v-btn
-              :disabled="!valid"
-              color="success"
-              class="mr-12"
-              align="center"
-              @click="login(usuario)"
-            >
-              Login
+              <v-btn
+                :disabled="!valid"
+                color="success"
+                class="mr-12"
+                align="center"
+                @click="login(usuario)"
+              >
+                Login
+              </v-btn>
+              <v-btn color="warning" @click="resetValidation">
+                Cadastre-se
+              </v-btn>
+            </v-form>
+          </div>
+          <div v-else>
+            <p>
+              {{ this.$auth.$storage.getUniversal('usuarioLogado').nome }}
+            </p>
+            <v-btn icon @click="logOut()">
+              <v-icon>mdi-cart-outline</v-icon>
             </v-btn>
-            <v-btn color="warning" @click="resetValidation">
-              Cadastre-se
-            </v-btn>
-          </v-form>
+          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -72,6 +82,11 @@ export default {
       } catch (error) {
         alert(error)
       }
+    },
+    logOut() {
+      const usuarioLogado = this.$auth.$storage.getUniversal('usuarioLogado')
+      console.log(usuarioLogado)
+      this.$auth.$storage.removeUniversal('usuarioLogado')
     },
     reset() {
       this.$refs.form.reset()

@@ -85,6 +85,11 @@ export default {
   },
   methods: {
     async finalizarPedido(pedido) {
+      if (this.$auth.$storage.getUniversal('usuarioLogado')) {
+        alert('Tem alguém Logado')
+      } else {
+        alert('Abre Login')
+      }
       this.calculaValores()
       window.open(
         `http://www.sicadi.com.br/mhouse/boleto/boleto3.php?numero_banco=341-7&local_pagamento=PAG%C1VEL+EM+QUALQUER+BANCO+AT%C9+O+VENCIMENTO&cedente=Tshirt-Vendas&data_documento=28%2F01%2F2021&numero_documento=DF+00113&especie=Dinheiro&aceite=N&data_processamento=29%2F01%2F2021&uso_banco=&carteira=179&especie_moeda=Real&quantidade=1&valor=1&vencimento=05%2F02%2F2021&agencia=0049&codigo_cedente=10201-5&meunumero=00010435&valor_documento=${pedido.valor}%2C00&instrucoes=Ap%F3s+o+vencimento+nao+receber&mensagem1=Teste&mensagem2=&mensagem3=ATEN%C7%C3O%3A+N%C3O+RECEBER+AP%D3S+O+VENCIMENTO&sacado=&Submit=Enviar`,
