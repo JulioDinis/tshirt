@@ -14,6 +14,9 @@
           :loja="true"
           :action="redirecionar"
         />
+        <div v-if="empty">
+          <p>Nenhuma estampa encontrada</p>
+        </div>
       </v-card>
     </v-col>
   </v-row>
@@ -33,6 +36,7 @@ export default {
       busca: '',
       itens: [],
       carregado: false,
+      empty: false,
     }
   },
   watch: {
@@ -40,26 +44,29 @@ export default {
       this.buscar(this.busca)
     },
     itens(novosItens) {
+      this.carregado = false
+      console.log('alterado')
       localStorage.itens = novosItens
       this.itens = novosItens
       if (this.itens.length > 0) {
+        this.empty = false
         setInterval(() => {
           this.carregado = true
-        }, 3000)
+        }, 2000)
       } else this.empty = true
-      setInterval(() => {
-        this.carregado = true
-      }, 3000)
     },
   },
   methods: {
-    buscar(busca) {
-      this.$axios.get(`/estampa/busca/${busca}`).then((response) => {
-        this.itens = response.data
-        this.itens.forEach((element) => {
+    async buscar(busca) {
+      let estampas
+      await this.$axios.get(`/estampa/busca/${busca}`).then((response) => {
+        estampas = response.data
+        estampas.forEach((element) => {
           this.buscaImagens(element)
         })
       })
+      this.itens = estampas
+      console.log(this.itens)
     },
     async buscaImagens(estampa) {
       await this.$axios.get(`/estampa/img/${estampa.id}`).then((img) => {

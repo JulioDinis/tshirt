@@ -24,7 +24,9 @@
 
             <v-card-actions>
               <div v-if="loja">
-                <v-btn @click="action(estampa)">Selecionar</v-btn>
+                <v-btn icon placeholder="Selecionar" @click="action(estampa)">
+                  <v-icon color="blue darken-2">mdi-cart</v-icon>
+                </v-btn>
               </div>
               <div v-else>
                 <v-btn @click="action(estampa.id)">Editar </v-btn>

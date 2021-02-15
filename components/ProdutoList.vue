@@ -25,17 +25,28 @@
             <v-card-actions>
               <v-spacer></v-spacer>
 
-              <v-btn
-                icon
-                placeholder="Editar Produto"
-                @click="editar(produto.id)"
-              >
-                <v-icon color="blue darken-2">mdi-pencil</v-icon>
-              </v-btn>
+              <div v-if="loja">
+                <v-btn
+                  icon
+                  placeholder="Escolher Produto"
+                  @click="editar(produto.id)"
+                >
+                  <v-icon color="blue darken-2">mdi-cart</v-icon>
+                </v-btn>
+              </div>
+              <div v-else>
+                <v-btn
+                  icon
+                  placeholder="Editar Produto"
+                  @click="editar(produto.id)"
+                >
+                  <v-icon color="blue darken-2">mdi-pencil</v-icon>
+                </v-btn>
 
-              <v-btn icon @click="excluir(produto.id)">
-                <v-icon color="red darken-3">mdi-delete</v-icon>
-              </v-btn>
+                <v-btn icon @click="excluir(produto.id)">
+                  <v-icon color="red darken-3">mdi-delete</v-icon>
+                </v-btn>
+              </div>
             </v-card-actions>
 
             <v-card-actions>
@@ -62,6 +73,10 @@ export default {
     itens: {
       type: Array,
       default() {},
+    },
+    loja: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({}),

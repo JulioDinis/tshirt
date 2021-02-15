@@ -10,7 +10,12 @@
           label="Busca"
           placeholder="Busque aqui"
         ></v-text-field>
-        <ProdutoList :itens="itens" :editar="redirecionar" />
+        <ProdutoList
+          v-if="carregado"
+          :itens="itens"
+          :editar="redirecionar"
+          :loja="true"
+        />
       </v-card>
     </v-col>
   </v-row>
@@ -29,22 +34,38 @@ export default {
     return {
       busca: '',
       itens: [],
+      carregado: false,
+      empty: false,
     }
   },
   watch: {
     busca(busca) {
       this.buscar(busca)
     },
+    itens(novosItens) {
+      this.carregado = false
+      console.log('alterado')
+      localStorage.itens = novosItens
+      this.itens = novosItens
+      if (this.itens.length > 0) {
+        this.empty = false
+        setInterval(() => {
+          this.carregado = true
+        }, 2000)
+      } else this.empty = true
+    },
   },
   methods: {
-    async buscar() {
-      console.log(this.$route.params)
-      await this.$axios.get('/produto').then((response) => {
-        this.itens = response.data
-        this.itens.forEach((element) => {
+    async buscar(busca) {
+      let produtos
+      await this.$axios.get(`/produto/busca/${busca}`).then((response) => {
+        produtos = response.data
+        produtos.forEach((element) => {
           this.buscaImagens(element)
         })
       })
+      this.itens = produtos
+      console.log(this.itens)
     },
     async buscaImagens(produto) {
       await this.$axios.get(`/produto/img/${produto.id}`).then((img) => {

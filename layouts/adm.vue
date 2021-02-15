@@ -73,6 +73,11 @@ export default {
           title: 'Tamanhos',
           to: '/tamanho',
         },
+        {
+          icon: 'mdi-sale',
+          title: 'Promoções',
+          to: '/promocao',
+        },
       ],
       miniVariant: false,
       right: true,
